@@ -33,6 +33,9 @@
     <ClCompile Include="Producer_Consumer_monitor.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="Test_atomic.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Concepts.h">
@@ -48,6 +51,9 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="Producer_Consumer_monitor.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Test_atomic.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
