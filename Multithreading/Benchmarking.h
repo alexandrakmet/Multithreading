@@ -11,9 +11,10 @@ namespace thread_sync {
 	private:
 		static long* time_waiting;
 		static std::time_t* time_ending;
-		static std::string* types;
+		static Lockable* types[3];
 		static int increment;
-		template<typename T> static void test_lock(int);
+		//template<typename T> static void test_lock(int);
+		static void test_lock(Lockable*, int);
 	public:
 		Benchmarking();
 		~Benchmarking();

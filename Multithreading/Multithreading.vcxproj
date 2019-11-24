@@ -164,6 +164,9 @@
     <ClCompile Include="Multithreading.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Producer_Consumer_monitor.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="spinlock.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -172,6 +175,7 @@
     <ClInclude Include="Benchmarking.h" />
     <ClInclude Include="Concepts.h" />
     <ClInclude Include="MyMutex.h" />
+    <ClInclude Include="Producer_Consumer_monitor.h" />
     <ClInclude Include="spinlock.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
