@@ -12,16 +12,16 @@ namespace thread_sync {
 
 	bool spinlock::try_lock(int i)
 	{
-		return !m_lock.test_and_set(std::memory_order_acquire);;
+		return !_lock.test_and_set(std::memory_order_acquire);;
 	}
 
 	void thread_sync::spinlock::lock(int i)
 	{
-		while (m_lock.test_and_set(std::memory_order_acquire));
+		while (_lock.test_and_set(std::memory_order_acquire));
 	}
 
 	void thread_sync::spinlock::unlock(int i)
 	{
-		m_lock.clear(std::memory_order_release);
+		_lock.clear(std::memory_order_release);
 	}
 }

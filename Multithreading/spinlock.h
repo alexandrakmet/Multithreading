@@ -7,7 +7,7 @@ namespace thread_sync {
 	class spinlock : public Lockable
 	{
 	private:
-		std::atomic_flag m_lock = ATOMIC_FLAG_INIT;
+		std::atomic_flag _lock = ATOMIC_FLAG_INIT;
 	public:
 		spinlock();
 		~spinlock();

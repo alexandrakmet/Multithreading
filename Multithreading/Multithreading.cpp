@@ -8,8 +8,9 @@ using namespace thread_sync;
 
 int main()
 {
-	ProducerConsumer pc;
+	Benchmarking::test(5);
+	/*ProducerConsumer pc;
 	pc.test(5, 3);
 	int k;
-	std::cin >> k;
+	std::cin >> k;*/
 }
