@@ -3,6 +3,7 @@
 #include <ctime>
 #include <iostream>
 #include "MyMutex.h"
+#include "spinlock.h"
 
 namespace thread_sync {
 	class Benchmarking
@@ -12,7 +13,7 @@ namespace thread_sync {
 		static std::time_t* time_ending;
 		static std::string* types;
 		static int increment;
-		template<class T> static void test_lock(int);
+		template<typename T> static void test_lock(int);
 	public:
 		Benchmarking();
 		~Benchmarking();

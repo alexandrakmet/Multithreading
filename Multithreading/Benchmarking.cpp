@@ -18,16 +18,15 @@ namespace thread_sync {
 
 	void Benchmarking::test(int n) {
 		std::chrono::time_point<std::chrono::system_clock> start, end;
-
 		start = std::chrono::system_clock::now();
-		test_lock<BlackWhiteBakeryLock>( n);
+		test_lock<BlackWhiteBakeryLock>(n);
 		end = std::chrono::system_clock::now();
 
 		time_waiting[0] = std::chrono::duration_cast<std::chrono::milliseconds>
 			(end - start).count();
 		time_ending[0] = std::chrono::system_clock::to_time_t(end);
 
-		std::cout << "Computations ended at " << std::ctime(&time_ending[0]) << "\nDuration: " << time_waiting[0]<<"(ms)";
+		std::cout << "\nComputations ended at " << std::ctime(&time_ending[0]) << "Duration: " << time_waiting[0]<<"(ms)" << std::endl;
 
 
 		start = std::chrono::system_clock::now();
@@ -38,11 +37,21 @@ namespace thread_sync {
 			(end - start).count();
 		time_ending[1] = std::chrono::system_clock::to_time_t(end);
 
-		std::cout << "\nComputations ended at " << std::ctime(&time_ending[0]) << "\nDuration: " << time_waiting[1] << "(ms)";
+		std::cout << "\nComputations ended at " << std::ctime(&time_ending[0]) << "Duration: " << time_waiting[1] << "(ms)"<< std::endl;
+
+		start = std::chrono::system_clock::now();
+		test_lock<spinlock>(n);
+		end = std::chrono::system_clock::now();
+
+		time_waiting[2] = std::chrono::duration_cast<std::chrono::milliseconds>
+			(end - start).count();
+		time_ending[2] = std::chrono::system_clock::to_time_t(end);
+
+		std::cout << "\nComputations ended at " << std::ctime(&time_ending[0]) << "Duration: " << time_waiting[2] << "(ms)" << std::endl;
 
 	}
 	template<class T>
-	void Benchmarking::test_lock( int n)
+	void Benchmarking::test_lock(int n)
 	{
 		int counter = 0;
 		std::thread *threads = new std::thread[n];
@@ -65,7 +74,7 @@ namespace thread_sync {
 			threads[i].join();
 		}
 
-		std::cout << "\n counter= " << counter << std::endl;
+		std::cout << "\ncounter = " << counter;
 
 	}
 }
