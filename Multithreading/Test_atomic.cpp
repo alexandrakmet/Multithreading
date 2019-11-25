@@ -33,19 +33,20 @@ Test_atomic::~Test_atomic()
 {
 }
 
-void Test_atomic::test(int n)
+void Test_atomic::test(int num_threads)
 {
-	std::thread *threads = new std::thread[n];
+	std::thread *threads = new std::thread[num_threads];
 
-	for (int i = 0; i < n; ++i) {
+	for (int i = 0; i < num_threads; ++i) {
 		threads[i] = std::thread(&Test_atomic::_thread_func, &*this);
 	}
 
-	for (int i = 0; i < n; ++i) {
+	for (int i = 0; i < num_threads; ++i) {
 		threads[i].join();
 	}
 
-	std::cout << _counter.get();
+	std::cout << "Number of threads: " << num_threads << std::endl;
+	std::cout << "Counter = " << _counter.get();
 
 }
 

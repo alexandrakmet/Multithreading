@@ -22,7 +22,8 @@ void benchmarking() {
 }
 int main()
 {
-	benchmarking();
+	//benchmarking();
+	//producer_consumer_problem();
+	atomic_counter_threads_test();
 	cin.get();
-
 }
