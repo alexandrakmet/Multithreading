@@ -2,17 +2,27 @@
 
 #include <iostream>
 #include "Benchmarking.h"
-#include "spinlock.h"
 #include "Producer_Consumer_monitor.h"
 #include "Test_atomic.h"
 using namespace thread_sync;
 
-int main()
-{
-	//Benchmarking::test(5);
-	/*ProducerConsumer pc;
+void producer_consumer_problem() {
+	ProducerConsumer pc;
 	pc.test(5, 3);
-	*/
+}
+
+void atomic_counter_threads_test() {
 	Test_atomic test;
 	test.test(5);
+}
+
+void benchmarking() {
+	Benchmarking b;
+	b.test(5);
+}
+int main()
+{
+	benchmarking();
+	cin.get();
+
 }

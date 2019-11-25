@@ -53,9 +53,11 @@ ProducerConsumer::~ProducerConsumer()
 
 void ProducerConsumer::prod_func()
 {
+	using namespace std::chrono_literals;
 	while(true) {
 		int item = produce_item();
 		monitor.insert(item);
+		std::this_thread::sleep_for(100ms);
 	}
 }
 
@@ -69,9 +71,11 @@ int ProducerConsumer::produce_item()
 
 void ProducerConsumer::cons_func()
 {
+	using namespace std::chrono_literals;
 	while(true) {
 		int item = monitor.remove();
 		consume_item(item);
+		std::this_thread::sleep_for(100ms);
 	}
 }
 
@@ -84,10 +88,10 @@ void ProducerConsumer::test(int p, int c)
 	std::thread *producers = new std::thread[p];
 	std::thread *consumers = new std::thread[c];
 	
-	for (int i = 0; i < p; ++i) {
+	for (int i = 0; i < c; ++i) {
 		consumers[i] = std::thread(&ProducerConsumer::cons_func, &*this);
 	}
-	for (int i = 0; i < c; ++i) {
+	for (int i = 0; i < p; ++i) {
 		producers[i] = std::thread (&ProducerConsumer::prod_func, &*this);
 	}
 	

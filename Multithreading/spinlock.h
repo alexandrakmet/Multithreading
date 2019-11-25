@@ -15,5 +15,4 @@ namespace thread_sync {
 		void lock(int i) override;
 		void unlock(int i) override;
 	};
-
 }

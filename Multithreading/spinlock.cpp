@@ -3,6 +3,7 @@
 namespace thread_sync {
 	spinlock::spinlock()
 	{
+
 	}
 
 

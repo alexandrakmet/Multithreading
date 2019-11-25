@@ -5,10 +5,12 @@
 #include <mutex>
 #include <random>
 
+#define N 100
+
 class Producer_Consumer_monitor
 {
 private:
-	static const int N = 100;
+	
 	std::mutex m;
 	std::condition_variable full, empty;
 	int count = 0, start = 0, end = 0;

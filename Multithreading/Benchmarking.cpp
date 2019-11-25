@@ -1,42 +1,60 @@
 #include "Benchmarking.h"
+#include <vector>
+#include <mutex>
+#include <future>
 
 namespace thread_sync {
 
-	long* Benchmarking::_time_waiting = new long[Benchmarking::NUM_TYPES];
-	int* Benchmarking::_counters = new int[Benchmarking::NUM_TYPES];
-	Lockable* Benchmarking::_types[Benchmarking::NUM_TYPES] = { new BlackWhiteBakeryLock, new ImprovedBakeryLock, new spinlock };
-	std::string Benchmarking::_type_names[Benchmarking::NUM_TYPES] = { "BlackWhiteBakeryLock", "ImprovedBakeryLock", "Spinlock\t" };
-	int Benchmarking::_increment = 0;
+	
 
 	Benchmarking::Benchmarking()
 	{
+		_time_waiting = new long[NUM_TYPES];
+		_counters = new int[NUM_TYPES];
+		_types[0] = new BlackWhiteBakeryLock;
+		_types[1] = new ImprovedBakeryLock;
+		_types[2] = new spinlock;
+		_type_names[0] = "BlackWhiteBakeryLock";
+		_type_names[1] = "ImprovedBakeryLock";
+		_type_names[2] = "Spinlock\t" ;
+		_increment = 0;
 	}
 
 
 	Benchmarking::~Benchmarking()
 	{
-		
+		//delete _time_waiting;
+		//delete _counters;
+		//delete[] _type_names;
+		//delete[] _types;
 	}
 
-	void Benchmarking::test(int n) {
-		std::chrono::time_point<std::chrono::system_clock> start, end;
+	void Benchmarking::test(int num_threads) {
+
+		std::thread threads[NUM_TYPES];
+
+		auto f = [&](int num_threads, int i) {
+			_counters[i] = _test_lock<Lockable>(_types[i], num_threads, i);
+		};
 
 		for (int i = 0; i < NUM_TYPES; i++) {
-			start = std::chrono::system_clock::now();
-			_counters[i] = _test_lock(_types[i], n);
-			end = std::chrono::system_clock::now();
-
-			_time_waiting[i] = std::chrono::duration_cast<std::chrono::milliseconds>
-				(end - start).count();
-
+			threads[i] = std::thread(f, num_threads, i);
 		}
-		_print_results(n);
+		for (int i = 0; i < NUM_TYPES; i++) {
+			threads[i].join();
+		}
+		
+		_print_results(num_threads);
+
 	}
 
-	int Benchmarking::_test_lock(Lockable* lk, int n)
+	template <class T>
+	int Benchmarking::_test_lock(T* lk, int num_threads, int i)
 	{
+		std::chrono::time_point<std::chrono::system_clock> start, end;
+		
 		int counter = 0;
-		std::thread *threads = new std::thread[n];
+		std::vector<std::thread> threads(num_threads);
 		
 		auto func = [&lk, &counter](int i) {
 				lk->lock(i);
@@ -44,23 +62,28 @@ namespace thread_sync {
 				lk->unlock(i);
 		};
 
-		for (int i = 0; i < n; ++i) {
+		start = std::chrono::system_clock::now();
+		for (int i = 0; i < num_threads; ++i) {
 			threads[i] = std::thread(func, i);
 		}
 
-		for (int i = 0; i < n; ++i) {
+		for (int i = 0; i < num_threads; ++i) {
 			threads[i].join();
 		}
+		end = std::chrono::system_clock::now();
 
+		_time_waiting[i] = std::chrono::duration_cast<std::chrono::milliseconds>
+			(end - start).count();
 		return counter;
 
 	}
-	void Benchmarking::_print_results(int n)
+
+	void Benchmarking::_print_results(int num_threads)
 	{
-		cout << "Number of threads: " << n << endl;
-		cout << "\t\t\tTime\t\tCounter"<< endl;
+		cout << "Number of threads: " << num_threads << endl;
+		cout << "\t\t\tTime" << "\t\tCounter" << endl;
 		for (int i = 0; i < NUM_TYPES; i++) {
-			cout << _type_names[i] << "\t" << _time_waiting[i] << "\t\t" << _counters[i] << endl;
+			cout << _type_names[i] << "\t" << _time_waiting[i] << "(ms)\t\t" << _counters[i] << endl;
 		}
 	}
 }
