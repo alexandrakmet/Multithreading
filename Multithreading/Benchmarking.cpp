@@ -5,7 +5,6 @@
 
 namespace thread_sync {
 
-	
 
 	Benchmarking::Benchmarking()
 	{
@@ -14,19 +13,19 @@ namespace thread_sync {
 		_types[0] = new BlackWhiteBakeryLock;
 		_types[1] = new ImprovedBakeryLock;
 		_types[2] = new spinlock;
+		_types[3] = new DekkerLock;
 		_type_names[0] = "BlackWhiteBakeryLock";
 		_type_names[1] = "ImprovedBakeryLock";
-		_type_names[2] = "Spinlock\t" ;
+		_type_names[2] = "Spinlock\t";
+		_type_names[3] = "DekkerLock\t";
 		_increment = 0;
 	}
 
 
 	Benchmarking::~Benchmarking()
 	{
-		//delete _time_waiting;
-		//delete _counters;
-		//delete[] _type_names;
-		//delete[] _types;
+		delete _time_waiting;
+		delete _counters;
 	}
 
 	void Benchmarking::test(int num_threads) {
@@ -38,10 +37,10 @@ namespace thread_sync {
 		};
 
 		for (int i = 0; i < NUM_TYPES; i++) {
-			threads[i] = std::thread(f, num_threads, i);
+			if(num_threads == 2 || i != NUM_TYPES-1 ) threads[i] = std::thread(f, num_threads, i);
 		}
 		for (int i = 0; i < NUM_TYPES; i++) {
-			threads[i].join();
+			if (num_threads == 2 || i != NUM_TYPES - 1) threads[i].join();
 		}
 		
 		_print_results(num_threads);
@@ -58,6 +57,7 @@ namespace thread_sync {
 		
 		auto func = [&lk, &counter](int i) {
 				lk->lock(i);
+				for(int j = 0; j < 1000000; j++)
 				counter++;
 				lk->unlock(i);
 		};
@@ -83,7 +83,7 @@ namespace thread_sync {
 		cout << "Number of threads: " << num_threads << endl;
 		cout << "\t\t\tTime" << "\t\tCounter" << endl;
 		for (int i = 0; i < NUM_TYPES; i++) {
-			cout << _type_names[i] << "\t" << _time_waiting[i] << "(ms)\t\t" << _counters[i] << endl;
+			if (num_threads == 2 || i != NUM_TYPES - 1) cout << _type_names[i] << "\t" << _time_waiting[i] << "(ms)\t\t" << _counters[i] << endl;
 		}
 	}
 }

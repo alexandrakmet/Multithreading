@@ -45,6 +45,8 @@ void Test_atomic::test(int num_threads)
 		threads[i].join();
 	}
 
+	delete[]threads;
+
 	std::cout << "Number of threads: " << num_threads << std::endl;
 	std::cout << "Counter = " << _counter.get();
 

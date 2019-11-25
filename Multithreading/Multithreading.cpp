@@ -18,12 +18,12 @@ void atomic_counter_threads_test() {
 
 void benchmarking() {
 	Benchmarking b;
-	b.test(5);
+	b.test(2);
 }
 int main()
 {
-	//benchmarking();
+	benchmarking();
 	//producer_consumer_problem();
-	atomic_counter_threads_test();
+	//atomic_counter_threads_test();
 	cin.get();
 }

@@ -152,10 +152,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AbstractFixnumLockable.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Benchmarking.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="BlackWhiteBakeryLock.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="DekkerLock.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="IDAllocator.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="ImprovedBakeryLock.cpp">
@@ -175,12 +184,16 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AbstractFixnumLockable.h" />
     <ClInclude Include="Benchmarking.h" />
     <ClInclude Include="Concepts.h" />
+    <ClInclude Include="DekkerLock.h" />
+    <ClInclude Include="IDAllocator.h" />
     <ClInclude Include="MyMutex.h" />
     <ClInclude Include="Producer_Consumer_monitor.h" />
     <ClInclude Include="spinlock.h" />
     <ClInclude Include="Test_atomic.h" />
+    <ClInclude Include="UnregisteredThreadException.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

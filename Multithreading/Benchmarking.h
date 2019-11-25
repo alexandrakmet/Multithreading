@@ -4,9 +4,10 @@
 #include <iostream>
 #include "MyMutex.h"
 #include "spinlock.h"
+#include "DekkerLock.h"
 using namespace std;
 
-#define NUM_TYPES 3
+#define NUM_TYPES 4
 
 namespace thread_sync {
 	class Benchmarking

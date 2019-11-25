@@ -101,6 +101,10 @@ void ProducerConsumer::test(int p, int c)
 	for (int i = 0; i < p; ++i) {
 		producers[i].join();
 	}
+
+
+	delete[]producers;
+	delete[]consumers;
 	
 }
 
