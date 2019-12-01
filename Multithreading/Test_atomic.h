@@ -8,8 +8,8 @@ class Counter
 public:
 	Counter();
 	~Counter();
-	void increase();
-	void decrease();
+	void increment();
+	void decrement();
 	int get();
 private:
 	std::atomic<int> _value = 0;

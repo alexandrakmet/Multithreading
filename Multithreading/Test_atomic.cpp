@@ -9,14 +9,14 @@ Counter::~Counter()
 {
 }
 
-void Counter::increase()
+void Counter::increment()
 {
-	_value.fetch_add(1);
+	_value++;
 }
 
-void Counter::decrease()
+void Counter::decrement()
 {
-	_value.fetch_sub(1);
+	_value--;
 }
 
 int Counter::get()
@@ -54,5 +54,5 @@ void Test_atomic::test(int num_threads)
 
 void Test_atomic::_thread_func()
 {
-	_counter.increase();
+	_counter.increment();
 }

@@ -19,6 +19,8 @@ void atomic_counter_threads_test() {
 void benchmarking() {
 	Benchmarking b;
 	b.test(2);
+	b.test(5);
+	b.test(10);
 }
 int main()
 {

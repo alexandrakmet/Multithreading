@@ -10,15 +10,15 @@ namespace thread_sync {
 	{
 		_time_waiting = new long[NUM_TYPES];
 		_counters = new int[NUM_TYPES];
-		_types[0] = new BlackWhiteBakeryLock;
-		_types[1] = new ImprovedBakeryLock;
-		_types[2] = new spinlock;
-		_types[3] = new DekkerLock;
-		_type_names[0] = "BlackWhiteBakeryLock";
-		_type_names[1] = "ImprovedBakeryLock";
-		_type_names[2] = "Spinlock\t";
-		_type_names[3] = "DekkerLock\t";
-		_increment = 0;
+		_types[1] = new spinlock;
+		_types[2] = new BlackWhiteBakeryLock;
+		_types[3] = new ImprovedBakeryLock;
+		_types[4] = new DekkerLock;
+		_type_names[0] = "AtomicCounter\t";
+		_type_names[1] = "Spinlock\t";
+		_type_names[2] = "BlackWhiteBakeryLock";
+		_type_names[3] = "ImprovedBakeryLock";
+		_type_names[4] = "DekkerLock\t";
 	}
 
 
@@ -26,6 +26,7 @@ namespace thread_sync {
 	{
 		delete _time_waiting;
 		delete _counters;
+
 	}
 
 	void Benchmarking::test(int num_threads) {
@@ -33,8 +34,10 @@ namespace thread_sync {
 		std::thread threads[NUM_TYPES];
 
 		auto f = [&](int num_threads, int i) {
-			_counters[i] = _test_lock<Lockable>(_types[i], num_threads, i);
+			_counters[i] = (i != 0)? _test_lock<Lockable>(_types[i], num_threads, i) : _test_atomic_counter(num_threads, i);
 		};
+
+		
 
 		for (int i = 0; i < NUM_TYPES; i++) {
 			if(num_threads == 2 || i != NUM_TYPES-1 ) threads[i] = std::thread(f, num_threads, i);
@@ -56,10 +59,18 @@ namespace thread_sync {
 		std::vector<std::thread> threads(num_threads);
 		
 		auto func = [&lk, &counter](int i) {
-				lk->lock(i);
-				for(int j = 0; j < 1000000; j++)
-				counter++;
-				lk->unlock(i);
+			for (int j = 0; j < 100000; j++) {
+				if (lk->try_lock(i)) {
+					counter++;
+					lk->unlock(i);
+				}
+				else {
+					lk->lock(i);
+					counter++;
+					lk->unlock(i);
+				}
+				
+			}
 		};
 
 		start = std::chrono::system_clock::now();
@@ -72,15 +83,40 @@ namespace thread_sync {
 		}
 		end = std::chrono::system_clock::now();
 
-		_time_waiting[i] = std::chrono::duration_cast<std::chrono::milliseconds>
-			(end - start).count();
+		_time_waiting[i] = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 		return counter;
 
 	}
 
+	int Benchmarking::_test_atomic_counter(int num_threads, int i) {
+		std::chrono::time_point<std::chrono::system_clock> start, end;
+		std::vector<std::thread> threads(num_threads);
+		Counter counter;
+
+		auto f = [&](int num_threads) {
+			for (int j = 0; j < 100000; j++) {
+				counter.increment();
+			}
+		};
+
+		start = std::chrono::system_clock::now();
+		for (int i = 0; i < num_threads; ++i) {
+			threads[i] = std::thread(f, num_threads);
+		}
+
+		for (int i = 0; i < num_threads; ++i) {
+			threads[i].join();
+		}
+		end = std::chrono::system_clock::now();
+
+		_time_waiting[i] = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+
+		return counter.get();
+	}
+
 	void Benchmarking::_print_results(int num_threads)
 	{
-		cout << "Number of threads: " << num_threads << endl;
+		cout << "\nNumber of threads: " << num_threads << endl;
 		cout << "\t\t\tTime" << "\t\tCounter" << endl;
 		for (int i = 0; i < NUM_TYPES; i++) {
 			if (num_threads == 2 || i != NUM_TYPES - 1) cout << _type_names[i] << "\t" << _time_waiting[i] << "(ms)\t\t" << _counters[i] << endl;
