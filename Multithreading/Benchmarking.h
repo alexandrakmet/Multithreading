@@ -8,7 +8,7 @@
 #include "Test_atomic.h"
 using namespace std;
 
-#define NUM_TYPES 5
+#define NUM_TYPES 6
 
 namespace thread_sync {
 	class Benchmarking

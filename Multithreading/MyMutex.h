@@ -38,4 +38,20 @@ namespace thread_sync {
 		volatile int* _number;
 		const int _n;
 	};
+
+	class TicketLock : public Lockable {
+	private:
+		uint32_t _bound_ticket(uint32_t ticket_value) const;
+	public:
+		TicketLock(uint32_t max_waiting_number = 0);
+		~TicketLock() = default;
+		void lock(int) override;
+		bool try_lock(int) override;
+		void unlock(int) override;
+	private:
+		std::atomic<uint32_t> _ticket_counter, _now_serving;
+		const uint32_t _max_waiting;
+		// when we now the maximum number of threads waiting at the same time
+		// for a shared resource, we can bound the ticket value
+	};
 }

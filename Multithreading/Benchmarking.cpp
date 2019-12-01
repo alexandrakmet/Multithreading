@@ -11,14 +11,16 @@ namespace thread_sync {
 		_time_waiting = new long[NUM_TYPES];
 		_counters = new int[NUM_TYPES];
 		_types[1] = new spinlock;
-		_types[2] = new BlackWhiteBakeryLock;
-		_types[3] = new ImprovedBakeryLock;
-		_types[4] = new DekkerLock;
+		_types[2] = new TicketLock;
+		_types[3] = new BlackWhiteBakeryLock;
+		_types[4] = new ImprovedBakeryLock;
+		_types[5] = new DekkerLock;
 		_type_names[0] = "AtomicCounter\t";
 		_type_names[1] = "Spinlock\t";
-		_type_names[2] = "BlackWhiteBakeryLock";
-		_type_names[3] = "ImprovedBakeryLock";
-		_type_names[4] = "DekkerLock\t";
+		_type_names[2] = "TicketLock\t";
+		_type_names[3] = "BlackWhiteBakeryLock";
+		_type_names[4] = "ImprovedBakeryLock";
+		_type_names[5] = "DekkerLock\t";
 	}
 
 
@@ -26,7 +28,6 @@ namespace thread_sync {
 	{
 		delete _time_waiting;
 		delete _counters;
-
 	}
 
 	void Benchmarking::test(int num_threads) {
@@ -119,7 +120,10 @@ namespace thread_sync {
 		cout << "\nNumber of threads: " << num_threads << endl;
 		cout << "\t\t\tTime" << "\t\tCounter" << endl;
 		for (int i = 0; i < NUM_TYPES; i++) {
-			if (num_threads == 2 || i != NUM_TYPES - 1) cout << _type_names[i] << "\t" << _time_waiting[i] << "(ms)\t\t" << _counters[i] << endl;
+			if (num_threads == 2 || i != NUM_TYPES - 1) cout << _type_names[i] << "\t" << _time_waiting[i] << "(ms)\t"<<
+				((_time_waiting[i]>999)? "":"\t") << _counters[i] << endl;
 		}
 	}
+
+
 }
